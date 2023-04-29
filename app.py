@@ -2,9 +2,20 @@ import streamlit as st
 import pypdfium2 as pdfium
 import pytesseract
 import re
+import scipy
+_mio4_py = f'{scipy.__file__[:-12]}/io/matlab/_mio4.py'
+with open(_mio4_py) as f:
+    string = f.read().replace("raise ValueError('O in MOPT integer should be 0, wrong format?')", 'pass')
+with open(_mio4_py, 'w') as f:
+    f.write(string)
+
+st.header('EyeSeeCam MATs')
+files = st.file_uploader(' ', type=['mat'], accept_multiple_files=True, label_visibility='collapsed', key='EyeSeeCam MATs')
+for file in files:
+    st.json(scipy.io.loadmat(file))
 
 st.header('EyeSeeCam PDFs')
-files = st.file_uploader(' ', type=['pdf'], accept_multiple_files=True, label_visibility='collapsed', key='EyeSeeCam')
+files = st.file_uploader(' ', type=['pdf'], accept_multiple_files=True, label_visibility='collapsed', key='EyeSeeCam PDFs')
 for file in files:
     st.subheader(file.name)
     pdf = pdfium.PdfDocument(file)
@@ -21,7 +32,7 @@ for file in files:
         Gain_Asymmetry
 
 st.header('ICS Impulse PDFs')
-files = st.file_uploader(' ', type=['pdf'], accept_multiple_files=True, label_visibility='collapsed', key='ICS Impulse')
+files = st.file_uploader(' ', type=['pdf'], accept_multiple_files=True, label_visibility='collapsed', key='ICS Impulse PDFs')
 for file in files:
     st.subheader(file.name)
     pdf = pdfium.PdfDocument(file)
@@ -39,7 +50,7 @@ for file in files:
     Relative_Asymmetry
 
 st.header('Ecleris PDFs')
-files = st.file_uploader(' ', type=['pdf'], accept_multiple_files=True, label_visibility='collapsed', key='Ecleris')
+files = st.file_uploader(' ', type=['pdf'], accept_multiple_files=True, label_visibility='collapsed', key='Ecleris PDFs')
 for file in files:
     st.subheader(file.name)
     pdf = pdfium.PdfDocument(file)
